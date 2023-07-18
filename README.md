@@ -1,9 +1,9 @@
 # Sharp Memory LCD with Adafruit Breakout Kernel Module
 
 This is a linux kernel module for Raspberry Pi to drive Sharp Memory-in-Pixel displays, specifically ones that are equipped with the 
-[Adafruit breakout board](https://www.adafruit.com/product/4694), in order to use it as a linux console monitor. There are other forks of this driver that have more work put into them, but they seem to be built for other hardware, and I had a hard time getting them to work with a Raspberry Pi Zero W and the aforementioned Adafruit Breakout. Thus, I created this repo. I made one small tweak, and it's working for me, ymmv.
+[Adafruit breakout board](https://www.adafruit.com/product/4694), in order to use it as a linux framebuffer console monitor. There are other forks of this driver that have more work put into them, but they seem to be built for other hardware, and I had a hard time getting them to work with a Raspberry Pi Zero W and the aforementioned Adafruit Breakout. Thus, I created this repo. I made one small tweak, and it's working for me, ymmv.
 
-I plan on slowly hacking away at this with the intent of it always being able to run on the hardware specified as a simple linux console monitor.
+I plan on slowly hacking away at this with the intent of it always being able to run on the hardware specified as a simple linux framebuffer console monitor.
 
 Original README below until I can get this cleaned up more.
 
