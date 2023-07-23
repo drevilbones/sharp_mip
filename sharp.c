@@ -43,13 +43,13 @@ char vcomState;
 unsigned char lineBuffer[LCDWIDTH/8];
 
 struct sharp {
-    struct spi_device	*spi;
-	int			id;
-    char			name[sizeof("sharp-3")];
+    struct  spi_device	*spi;
+	int	    id;
+    char    name[sizeof("sharp-3")];
 
     struct mutex		mutex;
 	struct work_struct	work;
-	spinlock_t		lock;
+	spinlock_t		    lock;
 };
 
 struct sharp   *screen;
@@ -92,7 +92,7 @@ static struct fb_fix_screeninfo vfb_fix = {
     .xpanstep = 0,
     .ypanstep = 0,
     .ywrapstep =    0,
-    .visual =	FB_VISUAL_MONO10,
+    .visual =	FB_VISUAL_MONO01, //MONO10 for white on black maybe?
     .accel =    FB_ACCEL_NONE,
 };
 
@@ -109,8 +109,7 @@ static struct task_struct *thread1;
 static struct task_struct *fpsThread;
 static struct task_struct *vcomToggleThread;
 
-static int vfb_mmap(struct fb_info *info,
-            struct vm_area_struct *vma)
+static int vfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 {
     unsigned long start = vma->vm_start;
     unsigned long size = vma->vm_end - vma->vm_start;
@@ -205,7 +204,7 @@ int vcomToggleFunction(void* v)
 {
     while (!kthread_should_stop()) 
     {
-        msleep(50);
+        msleep(500); //this only needs to happen once a second, so twice a second is plenty
         vcomState = vcomState ? 0:1;
         gpio_set_value(VCOM, vcomState);
     }
@@ -225,7 +224,6 @@ int fpsThreadFunction(void* v)
 
 int thread_fn(void* v) 
 {
-    //int i;
     int x,y,i;
     char pixel;
     char hasChanged = 0;
@@ -235,10 +233,10 @@ int thread_fn(void* v)
     char sendBuffer[1 + (1+50+1)*1 + 1];
 
     clearDisplay();
-
-    //unsigned char *screenBufferCompressed;
+                              
     screenBufferCompressed = vzalloc((50+4)*240*sizeof(unsigned char)); 	//plante si on met moins
-
+                                                                            //machine translated:
+                                                                            //plant if you put less (???)
     //char bufferByte = 0;
     //char sendBuffer[1 + (1+50+1)*1 + 1];
     sendBuffer[0] = commandByte;
@@ -261,7 +259,7 @@ int thread_fn(void* v)
     }
 
     // Main loop
-    while (!kthread_should_stop()) 
+    while (!kthread_should_stop())
     {
         msleep(50);
 
@@ -297,6 +295,8 @@ int thread_fn(void* v)
             {
                 gpio_set_value(SCS, 1);
                 //la memoire allouee avec vzalloc semble trop lente...
+                //machine translated:
+                //The memory allocated with vzalloc seems too slow...
                 memcpy(sendBuffer, screenBufferCompressed+y*(50+4), 54);
                 spi_write(screen->spi, (const u8 *)(sendBuffer), 54);
                 gpio_set_value(SCS, 0);
@@ -398,11 +398,11 @@ err:
 
 static void sharp_remove(struct spi_device *spi)
 {
-        if (info) {
-                unregister_framebuffer(info);
-                fb_dealloc_cmap(&info->cmap);
-                framebuffer_release(info);
-        }
+    if (info) {
+        unregister_framebuffer(info);
+        fb_dealloc_cmap(&info->cmap);
+        framebuffer_release(info);
+    }
 	kthread_stop(thread1);
 	kthread_stop(fpsThread);
     kthread_stop(vcomToggleThread);
@@ -410,8 +410,8 @@ static void sharp_remove(struct spi_device *spi)
 }
 
 static struct spi_driver sharp_driver = {
-    .probe          = sharp_probe,
-    .remove         = sharp_remove,
+    .probe  = sharp_probe,
+    .remove = sharp_remove,
 	.driver = {
 		.name	= "sharp",
 		.owner	= THIS_MODULE,

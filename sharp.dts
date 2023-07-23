@@ -14,7 +14,7 @@
 			};
 
 			spidev@1{
-				status = "disabled";
+				status = "enabled";
 			};
 		};
 	};
